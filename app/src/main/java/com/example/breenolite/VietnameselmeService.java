@@ -3,6 +3,7 @@ package com.example.breenolite;
 import android.inputmethodservice.InputMethodService;
 import android.view.*;
 import android.view.inputmethod.InputConnection;
+import android.view.inputmethod.InputMethodManager;
 import android.graphics.Color;
 import android.graphics.drawable.GradientDrawable;
 import android.widget.*;
@@ -23,7 +24,7 @@ public class VietnameseImeService extends InputMethodService {
         Button back=key("⌫",1); back.setOnClickListener(v->backspace());
         bar.addView(lang); bar.addView(space); bar.addView(back); root.addView(bar,new LinearLayout.LayoutParams(-1,54));
         String[][] rows={{"q","w","e","r","t","y","u","i","o","p"},{"a","s","d","f","g","h","j","k","l"},{"⇧","z","x","c","v","b","n","m","⌫"},{"123",",","🌐","space",".","↵"}};
-        for(String[] rr:rows){ LinearLayout r=row(); for(String k:rr){ Button b=key(k,1); if(k.equals("space")) b.setText(" "); if(k.equals("⇧")) b.setOnClickListener(v->{shift=!shift; refreshCaps();}); else if(k.equals("⌫")) b.setOnClickListener(v->backspace()); else if(k.equals("↵")) b.setOnClickListener(v->enter()); else if(k.equals("🌐")) b.setOnClickListener(v->getInputMethodManager().showInputMethodPicker()); else if(k.equals("123")) b.setOnClickListener(v->toast("Bàn phím số đang được bổ sung")); else b.setOnClickListener(v->type(k)); r.addView(b,new LinearLayout.LayoutParams(0,1,1)); } root.addView(r,new LinearLayout.LayoutParams(-1,0,1)); }
+        for(String[] rr:rows){ LinearLayout r=row(); for(String k:rr){ Button b=key(k,1); if(k.equals("space")) b.setText(" "); if(k.equals("⇧")) b.setOnClickListener(v->{shift=!shift; refreshCaps();}); else if(k.equals("⌫")) b.setOnClickListener(v->backspace()); else if(k.equals("↵")) b.setOnClickListener(v->enter()); else if(k.equals("🌐")) b.setOnClickListener(v->getInputMethodManager().showInputMethodPicker()); else if(k.equals("space")) b.setOnClickListener(v->{ commitRaw(); ic=getCurrentInputConnection(); if(ic!=null) ic.commitText(" ",1); }); else if(k.equals("123")) b.setOnClickListener(v->toast("Bàn phím số đang được bổ sung")); else b.setOnClickListener(v->type(k)); r.addView(b,new LinearLayout.LayoutParams(0,1,1)); } root.addView(r,new LinearLayout.LayoutParams(-1,0,1)); }
         return root;
     }
     private InputMethodManager getInputMethodManager(){ return (android.view.inputmethod.InputMethodManager)getSystemService(INPUT_METHOD_SERVICE); }
